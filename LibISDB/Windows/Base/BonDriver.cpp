@@ -92,16 +92,40 @@ bool BonDriver::CreateIBonDriver()
 	if (m_pIBonDriver != nullptr)
 		return false;
 
-	auto pCreateBonDriver =
-		reinterpret_cast<IBonDriver * (*)()>(::GetProcAddress(m_hLib, "CreateBonDriver"));
-	if (pCreateBonDriver == nullptr)
-		return false;
-
-	LIBISDB_SEH_TRY {
-		m_pIBonDriver = pCreateBonDriver();
-	} LIBISDB_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
-		LIBISDB_SEH_TRACE(LIBISDB_STR("SEH exception in CreateBonDriver()\n"));
+	auto pCreateBonStruct =
+		reinterpret_cast<const CBonStructAdapter::STRUCT_IBONDRIVER * (*)()>(::GetProcAddress(m_hLib, "CreateBonStruct"));
+	if (pCreateBonStruct != nullptr) {
+		// 特定コンパイラに依存しないI/Fを使う
+		const CBonStructAdapter::STRUCT_IBONDRIVER *st = nullptr;
+		LIBISDB_SEH_TRY {
+			st = pCreateBonStruct();
+		} LIBISDB_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
+			LIBISDB_SEH_TRACE(LIBISDB_STR("SEH exception in CreateBonStruct()\n"));
+		}
+		if (st != nullptr) {
+			if (m_Bon2Adapter.Adapt(*st)) {
+				m_pIBonDriver = &m_Bon2Adapter;
+			} else {
+				m_BonAdapter.Adapt(*st);
+				m_pIBonDriver = &m_BonAdapter;
+			}
+		}
 	}
+#ifdef _MSC_VER
+	else {
+		auto pCreateBonDriver =
+			reinterpret_cast<IBonDriver * (*)()>(::GetProcAddress(m_hLib, "CreateBonDriver"));
+		if (pCreateBonDriver == nullptr)
+			return false;
+
+		LIBISDB_SEH_TRY {
+			m_pIBonDriver = pCreateBonDriver();
+		} LIBISDB_SEH_EXCEPT(EXCEPTION_EXECUTE_HANDLER) {
+			LIBISDB_SEH_TRACE(LIBISDB_STR("SEH exception in CreateBonDriver()\n"));
+		}
+	}
+#endif
+
 	if (m_pIBonDriver == nullptr)
 		return false;
 
