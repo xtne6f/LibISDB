@@ -251,7 +251,7 @@ namespace LibISDB
 #define LIBISDB_CHAR(c) c
 #endif
 
-#ifdef LIBISDB_WINDOWS
+#if defined(LIBISDB_WINDOWS) && !defined(__MINGW32__)
 #define LIBISDB_PRIs "hs"
 #define LIBISDB_PRIc "hc"
 #else
@@ -261,7 +261,7 @@ namespace LibISDB
 #define LIBISDB_PRIls "ls"
 #define LIBISDB_PRIlc "lc"
 
-#if defined(LIBISDB_WINDOWS) && (!defined(LIBISDB_WCHAR) || !defined(_CRT_STDIO_ISO_WIDE_SPECIFIERS))
+#if defined(LIBISDB_WINDOWS) && !defined(__MINGW32__) && (!defined(LIBISDB_WCHAR) || !defined(_CRT_STDIO_ISO_WIDE_SPECIFIERS))
 #define LIBISDB_PRIS "s"
 #define LIBISDB_PRIC "c"
 #else

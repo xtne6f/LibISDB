@@ -48,14 +48,14 @@ HRESULT VideoRenderer_VMR7Renderless::CreateDefaultAllocatorPresenter(HWND hwndR
 
 	hr = ::CoCreateInstance(
 		CLSID_AllocPresenter, nullptr, CLSCTX_INPROC_SERVER,
-		IID_PPV_ARGS(m_SurfaceAllocator.GetPP()));
+		IID_IVMRSurfaceAllocator, reinterpret_cast<void**>(m_SurfaceAllocator.GetPP()));
 	if (SUCCEEDED(hr)) {
 		m_SurfaceAllocator->AdviseNotify(this);
-		hr = m_SurfaceAllocator.QueryInterface(&m_ImagePresenter);
+		hr = m_SurfaceAllocator.QueryInterface(IID_IVMRImagePresenter, &m_ImagePresenter);
 		if (SUCCEEDED(hr)) {
 			IVMRWindowlessControl *pWindowlessControl;
 
-			hr = m_SurfaceAllocator.QueryInterface(&pWindowlessControl);
+			hr = m_SurfaceAllocator.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl);
 			if (SUCCEEDED(hr)) {
 				RECT rc;
 
@@ -351,10 +351,10 @@ bool VideoRenderer_VMR7Renderless::Initialize(
 	}
 
 	IVMRFilterConfig *pFilterConfig;
-	hr = m_Renderer.QueryInterface(&pFilterConfig);
+	hr = m_Renderer.QueryInterface(IID_IVMRFilterConfig, &pFilterConfig);
 	pFilterConfig->SetRenderingMode(VMRMode_Renderless);
 	pFilterConfig->Release();
-	m_Renderer.QueryInterface(&m_SurfaceAllocatorNotify);
+	m_Renderer.QueryInterface(IID_IVMRSurfaceAllocatorNotify, &m_SurfaceAllocatorNotify);
 	CreateDefaultAllocatorPresenter(hwndRender);
 	m_SurfaceAllocatorNotify->AdviseSurfaceAllocator(1234, this);
 
@@ -404,7 +404,7 @@ bool VideoRenderer_VMR7Renderless::SetVideoPosition(
 	IVMRWindowlessControl *pWindowlessControl;
 	HRESULT hr;
 
-	hr = m_SurfaceAllocator.QueryInterface(&pWindowlessControl);
+	hr = m_SurfaceAllocator.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl);
 	if (FAILED(hr))
 		return false;
 
@@ -444,7 +444,7 @@ bool VideoRenderer_VMR7Renderless::GetDestPosition(ReturnArg<RECT> Rect)
 	if (m_Renderer && Rect) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			OK = SUCCEEDED(pWindowlessControl->GetVideoPosition(nullptr, &*Rect));
 			pWindowlessControl->Release();
 		}
@@ -461,7 +461,7 @@ COMMemoryPointer<> VideoRenderer_VMR7Renderless::GetCurrentImage()
 	if (m_Renderer) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			if (FAILED(pWindowlessControl->GetCurrentImage(&pDib)))
 				pDib = nullptr;
 			pWindowlessControl->Release();
@@ -479,7 +479,7 @@ bool VideoRenderer_VMR7Renderless::RepaintVideo(HWND hwnd, HDC hdc)
 	if (m_Renderer) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			if (SUCCEEDED(pWindowlessControl->RepaintVideo(hwnd, hdc)))
 				fOK = true;
 			pWindowlessControl->Release();
@@ -497,7 +497,7 @@ bool VideoRenderer_VMR7Renderless::DisplayModeChanged()
 	if (m_Renderer) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_SurfaceAllocator.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			if (SUCCEEDED(pWindowlessControl->DisplayModeChanged()))
 				fOK = true;
 			pWindowlessControl->Release();

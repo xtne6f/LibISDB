@@ -33,6 +33,10 @@
 #include <mfapi.h>
 #include <mferror.h>
 #include <mfidl.h>
+#ifdef __MINGW32__
+// EVR9のインタフェース定義を補うため
+#include "../DirectShowUtilities.hpp"
+#endif
 #include "../../../../Base/DebugDef.hpp"
 
 

@@ -28,7 +28,7 @@
 #define LIBISDB_STRING_UTILITIES_H
 
 
-#if !defined(_MSC_VER) && __has_include(<strings.h>)
+#if !defined(_MSC_VER) && !defined(__MINGW32__) && __has_include(<strings.h>)
 #include <strings.h>
 #endif
 
@@ -74,7 +74,7 @@ LIBISDB_PRAGMA_MSVC(warning(disable:4996))
 	inline void StringCopy(wchar_t *pDstString, const wchar_t *pSrcString) { std::wcscpy(pDstString, pSrcString); }
 LIBISDB_PRAGMA_MSVC(warning(pop))
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	inline void StringCopy(char *pDstString, const char *pSrcString, std::size_t Length) {
 		::strncpy_s(pDstString, Length, pSrcString, _TRUNCATE);
 	}
@@ -107,7 +107,7 @@ LIBISDB_PRAGMA_MSVC(warning(pop))
 		return std::wcsncmp(pString1, pString2, Length);
 	}
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	inline int StringCompareI(const char *pString1, const char *pString2) {
 		return ::_stricmp(pString1, pString2);
 	}

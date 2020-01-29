@@ -30,6 +30,7 @@
 
 #include "../../../../Base/ErrorHandler.hpp"
 #include "../../../Utilities/COMUtilities.hpp"
+#define STRSAFE_NO_DEPRECATE
 #include <dshow.h>
 
 

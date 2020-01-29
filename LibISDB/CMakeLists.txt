@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.8)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+enable_language(CXX)
+if(MINGW)
+  add_subdirectory(Windows)
+endif(MINGW)
+
 project(LibISDB CXX)
 
 add_library(LibISDB STATIC
@@ -83,4 +88,16 @@ if(NOT WIN32)
   set_target_properties(LibISDB PROPERTIES OUTPUT_NAME "libisdb")
 endif(NOT WIN32)
 
+if(MINGW)
+  target_sources(LibISDB PRIVATE Base/FileStreamWindows.cpp)
+  target_compile_options(LibISDB PRIVATE -msse -msse2)
+  target_compile_definitions(LibISDB PRIVATE _FILE_OFFSET_BITS=64 _UNICODE UNICODE)
+  set_target_properties(LibISDB PROPERTIES SUFFIX ".lib")
+endif(MINGW)
+
 install(TARGETS LibISDB ARCHIVE DESTINATION lib)
+
+add_custom_target(LibISDBVersionHash COMMAND ./versionhashgen.sh WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+if(GEN_LIBISDB_VERSION_HASH)
+  add_dependencies(LibISDB LibISDBVersionHash)
+endif()

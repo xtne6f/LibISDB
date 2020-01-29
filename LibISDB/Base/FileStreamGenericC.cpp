@@ -28,10 +28,11 @@
 #include "FileStreamGenericC.hpp"
 #include "../Utilities/StringUtilities.hpp"
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #include <io.h>
 #include <share.h>
-#elif !defined(LIBISDB_NO_POSIX_FILE)
+#endif
+#if !defined(_MSC_VER) && !defined(LIBISDB_NO_POSIX_FILE)
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif
@@ -97,7 +98,7 @@ bool FileStreamGenericC::Open(const CStringView &FileName, OpenFlag Flags)
 
 	std::FILE *pFile;
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 
 	if (!!(Flags & OpenFlag::SequentialRead))
 		StringAppend(Mode, LIBISDB_STR("S"));
