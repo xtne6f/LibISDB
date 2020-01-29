@@ -40,7 +40,7 @@ namespace LibISDB::DirectShow
 {
 
 	/** MPEG-2 解析フィルタクラス */
-	class __declspec(uuid("3F8400DA-65F1-4694-BB05-303CDE739680")) MPEG2ParserFilter
+	class DECLSPEC_UUID("3F8400DA-65F1-4694-BB05-303CDE739680") MPEG2ParserFilter
 #ifndef MPEG2PARSERFILTER_INPLACE
 		: public ::CTransformFilter
 #else
@@ -89,6 +89,11 @@ namespace LibISDB::DirectShow
 	};
 
 }	// namespace LibISDB::DirectShow
+
+
+#ifdef __CRT_UUID_DECL
+__CRT_UUID_DECL(LibISDB::DirectShow::MPEG2ParserFilter, 0x3F8400DA, 0x65F1, 0x4694, 0xBB,0x05, 0x30,0x3C,0xDE,0x73,0x96,0x80);
+#endif
 
 
 #endif	// ifndef LIBISDB_MPEG2_PARSER_FILTER_H

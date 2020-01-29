@@ -38,7 +38,7 @@ namespace LibISDB::DirectShow
 	class TSSourcePin;
 
 	/** TS ソースフィルタクラス */
-	class __declspec(uuid("DCA86296-964A-4e64-857D-8D140E630707")) TSSourceFilter
+	class DECLSPEC_UUID("DCA86296-964A-4e64-857D-8D140E630707") TSSourceFilter
 		: public CBaseFilter
 	{
 		friend TSSourcePin;
@@ -83,6 +83,11 @@ namespace LibISDB::DirectShow
 	};
 
 }	// namespace LibISDB::DirectShow
+
+
+#ifdef __CRT_UUID_DECL
+__CRT_UUID_DECL(LibISDB::DirectShow::TSSourceFilter, 0xDCA86296, 0x964A, 0x4e64, 0x85,0x7D, 0x8D,0x14,0x0E,0x63,0x07,0x07);
+#endif
 
 
 #endif	// ifndef LIBISDB_TS_SOURCE_FILTER_H

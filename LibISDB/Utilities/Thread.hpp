@@ -63,6 +63,8 @@ namespace LibISDB
 		void SetThreadName(const CharType *pName);
 
 #ifdef LIBISDB_WINDOWS
+		static unsigned int __stdcall ThreadStart(void *pParam);
+
 		HANDLE m_hThread = nullptr;
 		unsigned int m_ThreadID = 0;
 #else
