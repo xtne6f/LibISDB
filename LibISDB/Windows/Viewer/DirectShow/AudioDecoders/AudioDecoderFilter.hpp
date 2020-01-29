@@ -40,7 +40,7 @@ namespace LibISDB::DirectShow
 {
 
 	/** 音声デコーダフィルタクラス */
-	class __declspec(uuid("2AD583EC-1D57-4d0d-8991-487F2A0A0E8B")) AudioDecoderFilter
+	class DECLSPEC_UUID("2AD583EC-1D57-4d0d-8991-487F2A0A0E8B") AudioDecoderFilter
 		: public CTransformFilter
 	{
 	public:
@@ -227,6 +227,11 @@ namespace LibISDB::DirectShow
 	};
 
 }	// namespace LibISDB::DirectShow
+
+
+#ifdef __CRT_UUID_DECL
+__CRT_UUID_DECL(LibISDB::DirectShow::AudioDecoderFilter, 0x2AD583EC, 0x1D57, 0x4d0d, 0x89,0x91, 0x48,0x7F,0x2A,0x0A,0x0E,0x8B);
+#endif
 
 
 #endif	// ifndef LIBISDB_AUDIO_DECODER_FILTER_H

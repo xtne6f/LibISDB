@@ -37,7 +37,7 @@ namespace LibISDB::DirectShow
 {
 
 	/** H.264 解析フィルタクラス */
-	class __declspec(uuid("46941C5F-AD0A-47fc-A35A-155ECFCEB4BA")) H264ParserFilter
+	class DECLSPEC_UUID("46941C5F-AD0A-47fc-A35A-155ECFCEB4BA") H264ParserFilter
 		: public ::CTransformFilter
 		, public VideoParser
 		, protected H264Parser::AccessUnitHandler
@@ -123,6 +123,11 @@ namespace LibISDB::DirectShow
 	};
 
 }	// namespace LibISDB::DirectShow
+
+
+#ifdef __CRT_UUID_DECL
+__CRT_UUID_DECL(LibISDB::DirectShow::H264ParserFilter, 0x46941C5F, 0xAD0A, 0x47fc, 0xA3,0x5A, 0x15,0x5E,0xCF,0xCE,0xB4,0xBA);
+#endif
 
 
 #endif	// ifndef LIBISDB_H264_PARSER_FILTER_H

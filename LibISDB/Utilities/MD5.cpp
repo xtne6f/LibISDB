@@ -45,7 +45,7 @@ template<typename TFunc> LIBISDB_FORCE_INLINE void MD5Step(
 	TFunc func, uint32_t &w, uint32_t x, uint32_t y, uint32_t z, uint32_t data, int shift)
 {
 	w += func(x, y, z) + data;
-	w = RotateLeft32(w, shift);
+	w = RotateBitsLeft32(w, shift);
 	w += x;
 }
 
