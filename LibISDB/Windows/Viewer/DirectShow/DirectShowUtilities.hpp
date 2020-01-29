@@ -29,6 +29,7 @@
 
 
 #include <vector>
+#define STRSAFE_NO_DEPRECATE
 #include <dshow.h>
 #include <d3d9.h>
 #include <vmr9.h>
@@ -135,6 +136,84 @@ namespace LibISDB::DirectShow
 	RECT MapRect(const RECT &Rect, LONG XNum, LONG XDenom, LONG YNum, LONG YDenom);
 
 }	// namespace LibISDB::DirectShow
+
+
+#ifdef __MINGW32__
+#include <evr.h>
+#include <mfidl.h>
+
+namespace LibISDB::DirectShow
+{
+
+// <mfidl.h> lack of definitions (Apr 2021 checked)
+struct IMFRateSupport : public IUnknown
+{
+	STDMETHOD(GetSlowestRate)(MFRATE_DIRECTION eDirection, BOOL fThin, float *pflRate) = 0;
+	STDMETHOD(GetFastestRate)(MFRATE_DIRECTION eDirection, BOOL fThin, float *pflRate) = 0;
+	STDMETHOD(IsRateSupported)(BOOL fThin, float flRate, float *pflNearestSupportedRate) = 0;
+};
+
+// <evr9.h> lack of definitions (Feb 2020 checked)
+struct MFVideoAlphaBitmapParams
+{
+	DWORD dwFlags;
+	COLORREF clrSrcKey;
+	RECT rcSrc;
+	MFVideoNormalizedRect nrcDest;
+	FLOAT fAlpha;
+	DWORD dwFilterMode;
+};
+
+struct MFVideoAlphaBitmap
+{
+	BOOL GetBitmapFromDC;
+	union {
+		HDC hdc;
+		IDirect3DSurface9 *pDDS;
+	} bitmap;
+	MFVideoAlphaBitmapParams params;
+};
+
+struct IMFVideoMixerBitmap : public IUnknown
+{
+	STDMETHOD(SetAlphaBitmap)(const MFVideoAlphaBitmap *pBmpParms) = 0;
+	STDMETHOD(ClearAlphaBitmap)(void) = 0;
+	STDMETHOD(UpdateAlphaBitmapParameters)(const MFVideoAlphaBitmapParams *pBmpParms) = 0;
+	STDMETHOD(GetAlphaBitmapParameters)(MFVideoAlphaBitmapParams *pBmpParms) = 0;
+};
+
+struct IMFVideoProcessor : public IUnknown
+{
+	STDMETHOD(GetAvailableVideoProcessorModes)(UINT *lpdwNumProcessingModes, GUID **ppVideoProcessingModes) = 0;
+	STDMETHOD(GetVideoProcessorCaps)(LPGUID lpVideoProcessorMode, void *lpVideoProcessorCaps) = 0;
+	STDMETHOD(GetVideoProcessorMode)(LPGUID lpMode) = 0;
+	STDMETHOD(SetVideoProcessorMode)(LPGUID lpMode) = 0;
+	STDMETHOD(GetProcAmpRange)(void *pPropRange) = 0;
+	STDMETHOD(GetProcAmpValues)(void *Values) = 0;
+	STDMETHOD(SetProcAmpValues)(void *pValues) = 0;
+	STDMETHOD(GetFilteringRange)(void *pPropRange) = 0;
+	STDMETHOD(GetFilteringValue)(void *pValue) = 0;
+	STDMETHOD(SetFilteringValue)(void *pValue) = 0;
+	STDMETHOD(GetBackgroundColor)(COLORREF *lpClrBkg) = 0;
+	STDMETHOD(SetBackgroundColor)(COLORREF ClrBkg) = 0;
+};
+
+constexpr GUID CLSID_EnhancedVideoRenderer = {
+	0xFA10746C, 0x9B63, 0x4B6C, {0xBC, 0x49, 0xFC, 0x30, 0x0E, 0xA5, 0xF2, 0x56}
+};
+
+}	// namespace LibISDB::DirectShow
+
+// <mfidl.h> lack of definitions (Feb 2020 checked)
+#ifndef PRESENTATION_CURRENT_POSITION
+#define PRESENTATION_CURRENT_POSITION 0x7FFFFFFFFFFFFFFF
+#endif
+
+__CRT_UUID_DECL(LibISDB::DirectShow::IMFRateSupport, 0x0A9CCDBC, 0xD797, 0x4563, 0x96,0x67, 0x94,0xEC,0x5D,0x79,0x29,0x2D);
+__CRT_UUID_DECL(LibISDB::DirectShow::IMFVideoMixerBitmap, 0x814C7B20, 0x0FDB, 0x4EEC, 0xAF,0x8F, 0xF9,0x57,0xC8,0xF6,0x9E,0xDC);
+__CRT_UUID_DECL(LibISDB::DirectShow::IMFVideoProcessor, 0x6AB0000C, 0xFECE, 0x4D1F, 0xA2,0xAC, 0xA9,0x57,0x35,0x30,0x65,0x6E);
+
+#endif	// ifdef __MINGW32__
 
 
 #endif	// ifndef LIBISDB_DIRECTSHOW_UTILITIES_H

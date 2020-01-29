@@ -54,7 +54,7 @@ bool VideoRenderer_Default::InitializeBasicVideo(
 
 	HRESULT hr;
 
-	hr = pGraphBuilder->QueryInterface(IID_PPV_ARGS(m_VideoWindow.GetPP()));
+	hr = pGraphBuilder->QueryInterface(IID_IVideoWindow, reinterpret_cast<void**>(m_VideoWindow.GetPP()));
 	if (FAILED(hr)) {
 		SetHRESULTError(hr, LIBISDB_STR("IVideoWindow を取得できません。"));
 		return false;
@@ -73,7 +73,7 @@ bool VideoRenderer_Default::InitializeBasicVideo(
 	m_VideoWindow->SetWindowForeground(OATRUE);
 	m_VideoWindow->put_Visible(OATRUE);
 
-	hr = pGraphBuilder->QueryInterface(IID_PPV_ARGS(m_BasicVideo.GetPP()));
+	hr = pGraphBuilder->QueryInterface(IID_IBasicVideo, reinterpret_cast<void**>(m_BasicVideo.GetPP()));
 	if (FAILED(hr)) {
 		m_VideoWindow.Release();
 		SetHRESULTError(hr, LIBISDB_STR("IBasicVideo を取得できません。"));

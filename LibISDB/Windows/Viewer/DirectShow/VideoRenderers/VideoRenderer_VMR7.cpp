@@ -59,7 +59,7 @@ bool VideoRenderer_VMR7::Initialize(
 	}
 
 	IVMRFilterConfig *pFilterConfig;
-	hr = m_Renderer.QueryInterface(&pFilterConfig);
+	hr = m_Renderer.QueryInterface(IID_IVMRFilterConfig, &pFilterConfig);
 	if (FAILED(hr)) {
 		m_Renderer.Release();
 		SetHRESULTError(hr, LIBISDB_STR("IVMRFilterConfigを取得できません。"));
@@ -72,7 +72,7 @@ bool VideoRenderer_VMR7::Initialize(
 	pFilterConfig->Release();
 
 	IVMRMixerControl *pMixerControl;
-	if (SUCCEEDED(m_Renderer.QueryInterface(&pMixerControl))) {
+	if (SUCCEEDED(m_Renderer.QueryInterface(IID_IVMRMixerControl, &pMixerControl))) {
 		DWORD MixingPref;
 
 		pMixerControl->GetMixingPrefs(&MixingPref);
@@ -82,7 +82,7 @@ bool VideoRenderer_VMR7::Initialize(
 	}
 
 	IVMRWindowlessControl *pWindowlessControl;
-	hr = m_Renderer.QueryInterface(&pWindowlessControl);
+	hr = m_Renderer.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl);
 	if (FAILED(hr)) {
 		m_Renderer.Release();
 		SetHRESULTError(hr, LIBISDB_STR("IVMRWindowlessControlを取得できません。"));
@@ -135,7 +135,7 @@ bool VideoRenderer_VMR7::SetVideoPosition(
 	IVMRWindowlessControl *pWindowlessControl;
 	HRESULT hr;
 
-	hr = m_Renderer.QueryInterface(&pWindowlessControl);
+	hr = m_Renderer.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl);
 	if (FAILED(hr))
 		return false;
 
@@ -175,7 +175,7 @@ bool VideoRenderer_VMR7::GetDestPosition(ReturnArg<RECT> Rect)
 	if (m_Renderer && Rect) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_Renderer.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_Renderer.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			OK = SUCCEEDED(pWindowlessControl->GetVideoPosition(nullptr, &*Rect));
 			pWindowlessControl->Release();
 		}
@@ -192,7 +192,7 @@ COMMemoryPointer<> VideoRenderer_VMR7::GetCurrentImage()
 	if (m_Renderer) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_Renderer.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_Renderer.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			if (FAILED(pWindowlessControl->GetCurrentImage(&pDib)))
 				pDib = nullptr;
 			pWindowlessControl->Release();
@@ -210,7 +210,7 @@ bool VideoRenderer_VMR7::RepaintVideo(HWND hwnd, HDC hdc)
 	if (m_Renderer) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_Renderer.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_Renderer.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			if (SUCCEEDED(pWindowlessControl->RepaintVideo(hwnd, hdc)))
 				OK = true;
 			pWindowlessControl->Release();
@@ -228,7 +228,7 @@ bool VideoRenderer_VMR7::DisplayModeChanged()
 	if (m_Renderer) {
 		IVMRWindowlessControl *pWindowlessControl;
 
-		if (SUCCEEDED(m_Renderer.QueryInterface(&pWindowlessControl))) {
+		if (SUCCEEDED(m_Renderer.QueryInterface(IID_IVMRWindowlessControl, &pWindowlessControl))) {
 			if (SUCCEEDED(pWindowlessControl->DisplayModeChanged()))
 				OK = true;
 			pWindowlessControl->Release();

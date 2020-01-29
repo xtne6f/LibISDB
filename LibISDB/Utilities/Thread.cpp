@@ -130,7 +130,7 @@ void Thread::Terminate()
 void Thread::SetThreadName(const CharType *pName)
 {
 	auto pSetThreadDescription =
-		reinterpret_cast<decltype(SetThreadDescription) *>(
+		reinterpret_cast<HRESULT (WINAPI *)(HANDLE, const wchar_t *)>(
 			::GetProcAddress(::GetModuleHandle(TEXT("kernel32.dll")), "SetThreadDescription"));
 	if (pSetThreadDescription != nullptr) {
 #ifdef LIBISDB_WCHAR

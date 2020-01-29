@@ -196,24 +196,34 @@ namespace LibISDB
 			return AreCOMObjectsEqual(m_pObject, p.m_pObject);
 		}
 
-		template<typename TQuery> HRESULT QueryInterface(COMPointer<TQuery> *p) const
+		template<typename TQuery> HRESULT QueryInterface(REFIID riid, COMPointer<TQuery> *p) const
 		{
 			if (p == nullptr)
 				return E_POINTER;
 			p->Release();
 			if (m_pObject == nullptr)
 				return E_NOINTERFACE;
-			return m_pObject->QueryInterface(__uuidof(TQuery), reinterpret_cast<void **>(p->GetPP()));
+			return m_pObject->QueryInterface(riid, reinterpret_cast<void **>(p->GetPP()));
 		}
 
-		template<typename TQuery> HRESULT QueryInterface(TQuery **pp) const
+		template<typename TQuery> HRESULT QueryInterface(REFIID riid, TQuery **pp) const
 		{
 			if (pp == nullptr)
 				return E_POINTER;
 			*pp = nullptr;
 			if (m_pObject == nullptr)
 				return E_NOINTERFACE;
-			return m_pObject->QueryInterface(__uuidof(TQuery), reinterpret_cast<void **>(pp));
+			return m_pObject->QueryInterface(riid, reinterpret_cast<void **>(pp));
+		}
+
+		template<typename TQuery> HRESULT QueryInterface(COMPointer<TQuery> *p) const
+		{
+			return QueryInterface(__uuidof(TQuery), p);
+		}
+
+		template<typename TQuery> HRESULT QueryInterface(TQuery **pp) const
+		{
+			return QueryInterface(__uuidof(TQuery), pp);
 		}
 
 	private:
