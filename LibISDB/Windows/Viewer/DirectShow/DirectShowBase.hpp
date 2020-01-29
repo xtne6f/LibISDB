@@ -28,7 +28,11 @@
 #define LIBISDB_DIRECTSHOW_BASE_H
 
 
+#define STRSAFE_NO_DEPRECATE
 #include <dshow.h>
+#ifdef __MINGW32__
+#define STREAMS_MINGW_NOMINMAX
+#endif
 #include "../../../../Thirdparty/BaseClasses/streams.h"
 
 

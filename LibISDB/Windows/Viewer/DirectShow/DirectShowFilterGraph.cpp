@@ -108,7 +108,7 @@ bool FilterGraph::SetVolume(float Volume)
 	if (m_GraphBuilder) {
 		IBasicAudio *pBasicAudio;
 
-		if (SUCCEEDED(m_GraphBuilder.QueryInterface(&pBasicAudio))) {
+		if (SUCCEEDED(m_GraphBuilder.QueryInterface(IID_IBasicAudio, &pBasicAudio))) {
 			const long lVolume = std::clamp(static_cast<long>(Volume * 100.0f), -10000L, 0L);
 
 			LIBISDB_TRACE(LIBISDB_STR("Volume = %ld\n"), lVolume);
@@ -129,7 +129,7 @@ float FilterGraph::GetVolume() const
 	if (m_GraphBuilder) {
 		IBasicAudio *pBasicAudio;
 
-		if (SUCCEEDED(m_GraphBuilder.QueryInterface(&pBasicAudio))) {
+		if (SUCCEEDED(m_GraphBuilder.QueryInterface(IID_IBasicAudio, &pBasicAudio))) {
 			long lVolume;
 
 			if (SUCCEEDED(pBasicAudio->get_Volume(&lVolume)))

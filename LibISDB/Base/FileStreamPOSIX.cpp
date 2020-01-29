@@ -45,6 +45,10 @@ namespace
 {
 
 #ifdef LIBISDB_WINDOWS
+inline int fsync(int fd) { return ::_commit(fd); }
+#endif
+
+#ifdef _MSC_VER
 
 typedef __int64 off64_t;
 #ifdef _WIN64
@@ -54,7 +58,6 @@ typedef long ssize_t;
 #endif
 
 inline int posix_close(int fd) { return ::_close(fd); }
-inline int fsync(int fd) { return ::_commit(fd); }
 inline off64_t lseek64(int fd, off64_t offset, int origin) { return ::_lseeki64(fd, offset, origin); }
 inline off64_t tell64(int fd) { return ::_telli64(fd); }
 inline off64_t filelength64(int fd) { return ::_filelengthi64(fd); }
@@ -77,7 +80,7 @@ ssize_t posix_write(int fd, const void *buffer, std::size_t count)
 	return ::_write(fd, buffer, static_cast<unsigned int>(count));
 }
 
-#else	// LIBISDB_WINDOWS
+#else	// _MSC_VER
 
 #ifdef LIBISDB_MACOS
 typedef off_t off64_t;
@@ -100,7 +103,7 @@ inline ::off64_t tell64(int fd) { return ::lseek64(fd, 0, SEEK_CUR); }
 inline ::ssize_t posix_read(int fd, void *buffer, std::size_t count) { return ::read(fd, buffer, count); }
 inline ::ssize_t posix_write(int fd, const void *buffer, std::size_t count) { return ::write(fd, buffer, count); }
 
-#endif	// ndef LIBISDB_WINDOWS
+#endif	// ndef _MSC_VER
 
 }	// namespace
 

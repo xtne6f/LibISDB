@@ -34,7 +34,7 @@ namespace LibISDB
 {
 
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 
 
 void * AlignedAlloc(size_t Size, size_t Align, size_t Offset) noexcept
@@ -55,7 +55,7 @@ void AlignedFree(void *pBuffer) noexcept
 }
 
 
-#else	// _MSC_VER
+#else	// _MSC_VER || __MINGW32__
 
 
 namespace

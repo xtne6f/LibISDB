@@ -30,6 +30,11 @@
 // ダウンミックス係数のパラメータ取得にFAAD2の内部情報が必要
 #define HAVE_CONFIG_H
 #pragma include_alias("neaacdec.h", "../../../../../Thirdparty/faad2/include/neaacdec.h")
+#ifdef __MINGW32__
+// "common.h"で定義するmin/maxマクロが、同じく"common.h"のインクルードする標準ライブラリ内で参照するSTLと競合するため
+#define min min
+#define max max
+#endif
 #include "../../../../../Thirdparty/faad2/libfaad/common.h"
 #include "../../../../../Thirdparty/faad2/libfaad/structs.h"
 

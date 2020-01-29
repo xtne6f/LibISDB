@@ -31,6 +31,17 @@
 #include <mferror.h>
 
 
+#ifdef __MINGW32__
+// <mferror.h> lack of definitions (Feb 2020 checked)
+#ifndef MF_E_SHUTDOWN
+#define MF_E_SHUTDOWN ((HRESULT)0xC00D3E85)
+#endif
+#ifndef MF_E_SAMPLEALLOCATOR_EMPTY
+#define MF_E_SAMPLEALLOCATOR_EMPTY ((HRESULT)0xC00D4A3E)
+#endif
+#endif
+
+
 namespace LibISDB::DirectShow
 {
 
