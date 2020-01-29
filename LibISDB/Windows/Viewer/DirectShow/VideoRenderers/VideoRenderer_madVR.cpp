@@ -33,6 +33,11 @@
 #include "../../../../Base/DebugDef.hpp"
 
 
+#ifdef __CRT_UUID_DECL
+__CRT_UUID_DECL(IMadVRFrameGrabber, 0xB0F34BA5, 0x5EFD, 0x4762, 0xA0,0x7F, 0xFF,0x90,0x46,0xB4,0x56,0x6C);
+#endif
+
+
 namespace LibISDB::DirectShow
 {
 

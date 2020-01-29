@@ -53,6 +53,15 @@ Thread::~Thread()
 #ifdef LIBISDB_WINDOWS
 
 
+unsigned int __stdcall Thread::ThreadStart(void *pParam)
+{
+	Thread *pThis = static_cast<Thread *>(pParam);
+	pThis->SetThreadName(pThis->GetThreadName());
+	pThis->ThreadMain();
+	return 0U;
+}
+
+
 bool Thread::Start()
 {
 	if (m_hThread != nullptr)
@@ -61,12 +70,7 @@ bool Thread::Start()
 	m_hThread = reinterpret_cast<HANDLE>(
 		::_beginthreadex(
 			nullptr, 0,
-			[](void *pParam) -> unsigned int {
-				Thread *pThis = static_cast<Thread *>(pParam);
-				pThis->SetThreadName(pThis->GetThreadName());
-				pThis->ThreadMain();
-				return 0U;
-			},
+			ThreadStart,
 			this, 0, &m_ThreadID));
 	if (m_hThread == nullptr)
 		return false;

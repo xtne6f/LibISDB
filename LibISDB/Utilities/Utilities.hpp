@@ -40,8 +40,8 @@ namespace LibISDB
 	LIBISDB_FORCE_INLINE uint64_t ByteSwap64(uint64_t v) noexcept { return _byteswap_uint64(v); }
 #define LIBISDB_ROTATE_INTRINSICS
 #pragma intrinsic(_lrotl, _lrotr)
-	LIBISDB_FORCE_INLINE uint32_t RotateLeft32(uint32_t v, int shift) noexcept { return _lrotl(v, shift); }
-	LIBISDB_FORCE_INLINE uint32_t RotateRight32(uint32_t v, int shift) noexcept { return _lrotr(v, shift); }
+	LIBISDB_FORCE_INLINE uint32_t RotateBitsLeft32(uint32_t v, int shift) noexcept { return _lrotl(v, shift); }
+	LIBISDB_FORCE_INLINE uint32_t RotateBitsRight32(uint32_t v, int shift) noexcept { return _lrotr(v, shift); }
 #elif defined(__GNUC__) || defined(__clang__)
 #define LIBISDB_BYTE_SWAP_INTRINSICS
 	LIBISDB_FORCE_INLINE uint16_t ByteSwap16(uint16_t v) noexcept { return __builtin_bswap16(v); }
@@ -81,12 +81,12 @@ namespace LibISDB
 
 #ifndef LIBISDB_ROTATE_INTRINSICS
 
-	LIBISDB_FORCE_INLINE uint32_t RotateLeft32(uint32_t v, int shift) noexcept
+	LIBISDB_FORCE_INLINE uint32_t RotateBitsLeft32(uint32_t v, int shift) noexcept
 	{
 		return (v << shift) | (v >> (32 - shift));
 	}
 
-	LIBISDB_FORCE_INLINE uint32_t RotateRight32(uint32_t v, int shift) noexcept
+	LIBISDB_FORCE_INLINE uint32_t RotateBitsRight32(uint32_t v, int shift) noexcept
 	{
 		return (v >> shift) | (v << (32 - shift));
 	}

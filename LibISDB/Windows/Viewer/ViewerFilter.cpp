@@ -44,6 +44,26 @@
 EXTERN_C const CLSID CLSID_NullRenderer;
 
 
+#ifdef LAV_VIDEO_DECODER_WORKAROUND
+
+
+namespace LibISDB
+{
+MIDL_INTERFACE("8B81E022-52C7-4B89-9F11-ACFD063AABB4") IPinSegmentEx : public IUnknown
+{
+	virtual HRESULT STDMETHODCALLTYPE EndOfSegment(void) = 0;
+};
+}
+
+
+#ifdef __CRT_UUID_DECL
+__CRT_UUID_DECL(LibISDB::IPinSegmentEx, 0x8B81E022, 0x52C7, 0x4B89, 0x9F,0x11, 0xAC,0xFD,0x06,0x3A,0xAB,0xB4);
+#endif
+
+
+#endif	// LAV_VIDEO_DECODER_WORKAROUND
+
+
 namespace LibISDB
 {
 
@@ -145,12 +165,6 @@ HRESULT SetVideoMediaType(CMediaType *pMediaType, BYTE VideoStreamType, int Widt
 
 
 #ifdef LAV_VIDEO_DECODER_WORKAROUND
-
-
-interface __declspec(uuid("8B81E022-52C7-4B89-9F11-ACFD063AABB4")) IPinSegmentEx : public IUnknown
-{
-	virtual HRESULT STDMETHODCALLTYPE EndOfSegment(void) = 0;
-};
 
 
 bool IsLAVVideoDecoderName(const String &Name)
